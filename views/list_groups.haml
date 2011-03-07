@@ -1,0 +1,30 @@
+.panel
+  .title
+    =se("Notification Groups")
+  .instructions
+    =se("Edit groups here.")
+  .body
+    %table
+      -foreach($groups as $group)
+        %tr
+          %th +$group->name
+          %td
+            -if($group->weight>0)
+              =link_to('up', change_notification_template_group_weight_url($group, 'up'));
+          %td
+            -if($group->weight<count($groups)-1)
+              =link_to('down', change_notification_template_group_weight_url($group, 'down'));
+          %td
+            =link_to('delete', delete_notification_template_group_url($group));
+    =form_for($new_group)
+    %table
+      %tr 
+        %td
+          =text_field('name')
+        %td
+          =submit_tag('Add')
+      %tr
+        %td
+          =se("Group Name")
+        %td
+    =end_form_for()

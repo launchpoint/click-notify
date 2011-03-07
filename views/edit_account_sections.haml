@@ -1,0 +1,33 @@
+.instructions
+  =se("Your notification preferences control when and how you receive notifications from us.")
+.body
+  -$plugins = event('notifier_plugins')
+  %table
+    %tr
+      %th
+      %th
+      -foreach($plugins as $plugin)
+        %th =se($plugin['title'])
+    -foreach($groups as $group)
+      %tr
+        %th =se($group->name)
+        %th{:colspan=>count($plugins)+1}
+      -foreach($group->notification_templates as $nt)
+        -if($nt->is_system) continue;
+        %tr
+          %th
+          %td
+            +$nt->name
+          -foreach($plugins as $plugin)
+            %td
+              -if(!$nt->is_public && $plugin['is_public']==true) continue;
+              -$checked = ($nt->is_enabled_for($current_user,$plugin['name'])) ? 'checked="checked"' : '';
+              -$url = toggle_notifier_preference_url($nt, $plugin['name']);
+              -$disabled = ($nt->is_system) ? 'disabled="disabled"' : '';
+              -echo "<input name=\"chk{$nt->id}_{$plugin['name']}\" id=\"chk{$nt->id}_{$plugin['name']}\" type=\"checkbox\" {$checked} {$disabled} />";
+              :js
+                $(document).ready(function(){
+                  $("#<?php echo "chk{$nt->id}_{$plugin['name']}"; ?>").click(function(){
+                    $.get('<?=toggle_notifier_preference_url($nt, $plugin['name']) ?>');
+                  });
+                });

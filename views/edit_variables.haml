@@ -1,0 +1,34 @@
+.panel
+  .title
+    =se("Edit template variables for: ") . $template->name
+  .body
+    =form_for($template)
+    %table
+      -foreach($template->notification_template_variables as $variable)
+        -fields_for_multi($variable)
+        %tr
+          %th =se("Name")
+          %td =text_field('name')
+        %tr
+          %th =se("Description")
+          %td =text_field('description')
+        %tr
+          %th =se("PHP")
+          %td =text_field('php')
+        %tr
+          %td{:colspan=>2}
+            %hr
+        -end_fields_for_multi()
+      -fields_for_multi($new_var)
+      %tr
+        %th =se("Name")
+        %td =text_field('name')
+      %tr
+        %th =se("Description")
+        %td =text_field('description')
+      %tr
+        %th =se("PHP")
+        %td =text_field('php')
+      -end_fields_for_multi()
+    =submit_tag('Save')
+    =end_form_for()

@@ -1,0 +1,38 @@
+.panel
+  .title
+    =se("Notifications")
+  .body
+    .item
+      .title
+        =se("Delivery Method Settings")
+      .instructions
+        =se("Adjust the settings for each of the delivery methods.")
+      .body
+        -$links = gather(event('notification_plugin_links'),'links');
+        -foreach($links as $link)
+          %a{:href=>$link['href']} +$link['label']
+    .item
+      .title
+        =se("Groups")
+      .instructions
+        =se("Define template groups")
+      .body
+        =link_to('Edit Groups', list_notification_template_groups_url());
+    .item
+      .title
+        =se("Templates")
+      .instructions
+        =se("Configure delivery method templates for each notification type")
+      .body
+        %a{:href=>new_notification_template_url()} =se("new template")
+        %table
+          -foreach($templates as $template)
+            %tr
+              %td
+                +$template->tag
+              %td
+                %a{:href=>edit_notification_template_url($template)}
+                  +$template->name
+              %td
+                -if($template->is_public)
+                  =se("Public")

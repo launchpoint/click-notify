@@ -1,0 +1,69 @@
+.panel
+  .title
+    +$template->name
+  .body
+    .item
+      .title
+        =se("Basic Information")
+      .body
+        =form_for($template)
+        %table
+          %tr
+            %th =se("Function")
+            %td =text_field('tag')
+          %tr
+            %th =se("Nickname")
+            %td =text_field('name')
+          %tr
+            %th
+            %td
+              =checkbox_field('is_public')
+              =se("This notification is okay to publish to 3rd party web sites")
+          %tr
+            %th
+            %td
+              =checkbox_field('is_system')
+              =se("This notification is is a system notification and preferences cannot be changed by the user.")
+          %tr
+            %th =se("Group")
+            %td
+              =select_field('notification_template_group_id', $groups)
+          %tr
+            %th
+            %td
+              =checkbox_field('is_active_default')
+              =se("This notification is ON by default.")
+          %tr
+            %th
+            %td =submit_tag('Save')
+        =end_form_for()
+    -if(!$is_new)
+      .item
+        .title.collapsible_head
+          =se("Testing")
+        .collapsible
+          .instructions
+            =se("You can test all your notification methods at once by generating a test notification here. Regardless of your notification preferences in your account settings, you will get a test notification using all methods..")
+          .body
+            %a{:href=>edit_notification_template_url($template, array('t'=>true))} test now
+      .item
+        .title.collapsible_head
+          =se("Available template variables")
+        .collapsible
+          .instructions
+            =se("These variables are available in all templates. Use #variable_name# to indicate a variable for substitution.")
+          .body
+            %a{:href=>edit_notification_template_variables_url($template)} edit
+            -if($template->notification_template_variables)
+              %table
+                -foreach($template->notification_template_variables as $variable)
+                  %tr
+                    %th +"#".$variable->name."#"
+                    %td =se($variable->description)
+                    %td +$variable->php
+      -foreach($plugins as $plugin)
+        .item
+          .title.collapsible_head
+            =se($plugin['title'])
+          .collapsible
+            =$plugin['__output']
